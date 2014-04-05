@@ -34,6 +34,7 @@ bool Tile::shift(Tile& rhs)
 	if (value == 0 && rhs.value != 0) {
 		value = rhs.value;
 		rhs.value = 0;
+		has_merged = rhs.has_merged;
 		rhs.has_merged = false;
 		return true;
 	}
