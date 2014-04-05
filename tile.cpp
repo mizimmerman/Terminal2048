@@ -19,7 +19,7 @@ int Tile::merge(Tile& rhs)
 		value += rhs.value;
 		rhs.value = 0;
 		has_merged = true;
-		return value / 2;
+		return value;
 	}
 	return 0;
 }

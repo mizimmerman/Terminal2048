@@ -93,6 +93,14 @@ int Board::up()
 	bool did_something = false;
 	int score = 0;
 	for (int k = 0; k < 3; ++k) {
+		// Shift pass
+		for (int i = 1; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				if(board[i-1][j].shift(board[i][j]))
+					did_something = true;
+			}
+		}
+
 		// Merge pass
 		for (int i = 1; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
@@ -102,14 +110,6 @@ int Board::up()
 					no_free_space = false;
 					did_something = true;
 				}
-			}
-		}
-
-		// Shift pass
-		for (int i = 1; i < 4; ++i) {
-			for (int j = 0; j < 4; ++j) {
-				if(board[i-1][j].shift(board[i][j]))
-					did_something = true;
 			}
 		}
 	}
@@ -124,6 +124,14 @@ int Board::down()
 	bool did_something = false;
 	int score = 0;
 	for (int k = 0; k < 3; ++k) {
+		// Shift pass
+		for (int i = 3; i > 0; --i) {
+			for (int j = 0; j < 4; ++j) {
+				if(board[i][j].shift(board[i-1][j]))
+					did_something = true;
+			}
+		}
+
 		// Merge pass
 		for (int i = 3; i > 0; --i) {
 			for (int j = 0; j < 4; ++j) {
@@ -133,14 +141,6 @@ int Board::down()
 					no_free_space = false;
 					did_something = true;
 				}
-			}
-		}
-
-		// Shift pass
-		for (int i = 3; i > 0; --i) {
-			for (int j = 0; j < 4; ++j) {
-				if(board[i][j].shift(board[i-1][j]))
-					did_something = true;
 			}
 		}
 	}
@@ -156,6 +156,14 @@ int Board::left()
 	bool did_something = false;
 	int score = 0;
 	for (int k = 0; k < 3; ++k) {
+		// Shift pass
+		for (int j = 1; j < 4; ++j) {
+			for (int i = 0; i < 4; ++i) {
+				if(board[i][j-1].shift(board[i][j]))
+					did_something = true;
+			}
+		}
+
 		// Merge pass
 		for (int j = 1; j < 4; ++j) {
 			for (int i = 0; i < 4; ++i) {
@@ -165,14 +173,6 @@ int Board::left()
 					no_free_space = false;
 					did_something = true;
 				}
-			}
-		}
-
-		// Shift pass
-		for (int j = 1; j < 4; ++j) {
-			for (int i = 0; i < 4; ++i) {
-				if(board[i][j-1].shift(board[i][j]))
-					did_something = true;
 			}
 		}
 	}
@@ -188,6 +188,14 @@ int Board::right()
 	bool did_something = false;
 	int score = 0;
 	for (int k = 0; k < 3; ++k) {
+		// Shift pass
+		for (int j = 3; j > 0; --j) {
+			for (int i = 0; i < 4; ++i) {
+				if(board[i][j].shift(board[i][j-1]))
+					did_something = true;
+			}
+		}
+
 		// Merge pass
 		for (int j = 3; j > 0; --j) {
 			for (int i = 0; i < 4; ++i) {
@@ -197,14 +205,6 @@ int Board::right()
 					no_free_space = false;
 					did_something = true;
 				}
-			}
-		}
-
-		// Shift pass
-		for (int j = 3; j > 0; --j) {
-			for (int i = 0; i < 4; ++i) {
-				if(board[i][j].shift(board[i][j-1]))
-					did_something = true;
 			}
 		}
 	}
