@@ -10,9 +10,6 @@ public:
 	// Initializes the board, returns false if the game is over or won
 	bool init_round();
 
-	// Draws the board
-	void draw();
-
 	// Returns true if the player cannot make any moves
 	bool game_over();
 

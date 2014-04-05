@@ -1,4 +1,5 @@
 #include "board.h"
+#include "model.h"
 
 #include <iostream>
 #include <vector>
@@ -8,8 +9,6 @@ using std::rand;
 using std::vector;
 using std::cout;
 using std::endl;
-
-void print_border();
 
 Board::Board()
 {
@@ -26,30 +25,6 @@ bool Board::init_round()
 		}
 	}
 	return !game_over() && !game_won();
-}
-
-// Draws the board
-void Board::draw()
-{
-	print_border();
-	
-	// Print cells
-	for (int i = 0; i < 4; ++i) {
-		cout << '|';
-		for (int j = 0; j < 4; ++j)
-			cout << board[i][j] << '|';
-		print_border();
-	}
-
-	cout << endl;
-}
-
-void print_border()
-{
-	cout << endl << '+';
-	for (int i = 0; i < 4; ++i)
-		cout << "----" << '+';
-	cout << endl;
 }
 
 // Returns true if the player cannot make any moves
@@ -96,8 +71,11 @@ int Board::up()
 		// Shift pass
 		for (int i = 1; i < 4; ++i) {
 			for (int j = 0; j < 4; ++j) {
-				if(board[i-1][j].shift(board[i][j]))
+				if(board[i-1][j].shift(board[i][j])) {
 					did_something = true;
+					Model::get_instance()->notify_cell(i-1, j, board[i-1][j].get_value());
+					Model::get_instance()->notify_cell(i, j, board[i][j].get_value());
+				}
 			}
 		}
 
@@ -109,6 +87,8 @@ int Board::up()
 					score += add;
 					no_free_space = false;
 					did_something = true;
+					Model::get_instance()->notify_cell(i-1, j, board[i-1][j].get_value());
+					Model::get_instance()->notify_cell(i, j, board[i][j].get_value());
 				}
 			}
 		}
@@ -127,8 +107,11 @@ int Board::down()
 		// Shift pass
 		for (int i = 3; i > 0; --i) {
 			for (int j = 0; j < 4; ++j) {
-				if(board[i][j].shift(board[i-1][j]))
+				if(board[i][j].shift(board[i-1][j])) {
 					did_something = true;
+					Model::get_instance()->notify_cell(i-1, j, board[i-1][j].get_value());
+					Model::get_instance()->notify_cell(i, j, board[i][j].get_value());
+				}
 			}
 		}
 
@@ -140,6 +123,8 @@ int Board::down()
 					score += add;
 					no_free_space = false;
 					did_something = true;
+					Model::get_instance()->notify_cell(i-1, j, board[i-1][j].get_value());
+					Model::get_instance()->notify_cell(i, j, board[i][j].get_value());
 				}
 			}
 		}
@@ -159,8 +144,11 @@ int Board::left()
 		// Shift pass
 		for (int j = 1; j < 4; ++j) {
 			for (int i = 0; i < 4; ++i) {
-				if(board[i][j-1].shift(board[i][j]))
+				if(board[i][j-1].shift(board[i][j])) {
 					did_something = true;
+					Model::get_instance()->notify_cell(i, j-1, board[i][j-1].get_value());
+					Model::get_instance()->notify_cell(i, j, board[i][j].get_value());
+				}
 			}
 		}
 
@@ -172,6 +160,8 @@ int Board::left()
 					score += add;
 					no_free_space = false;
 					did_something = true;
+					Model::get_instance()->notify_cell(i, j-1, board[i][j-1].get_value());
+					Model::get_instance()->notify_cell(i, j, board[i][j].get_value());
 				}
 			}
 		}
@@ -191,8 +181,11 @@ int Board::right()
 		// Shift pass
 		for (int j = 3; j > 0; --j) {
 			for (int i = 0; i < 4; ++i) {
-				if(board[i][j].shift(board[i][j-1]))
+				if(board[i][j].shift(board[i][j-1])) {
 					did_something = true;
+					Model::get_instance()->notify_cell(i, j-1, board[i][j-1].get_value());
+					Model::get_instance()->notify_cell(i, j, board[i][j].get_value());
+				}
 			}
 		}
 
@@ -204,6 +197,8 @@ int Board::right()
 					score += add;
 					no_free_space = false;
 					did_something = true;
+					Model::get_instance()->notify_cell(i, j-1, board[i][j-1].get_value());
+					Model::get_instance()->notify_cell(i, j, board[i][j].get_value());
 				}
 			}
 		}
@@ -237,6 +232,7 @@ void Board::insert_random_tile()
 		int idx = rand() % free_spaces.size();
 		int val = ((rand() % 20) == 0) ? 4 : 2;
 		board[free_spaces[idx].row][free_spaces[idx].col].set_value(val);
+		Model::get_instance()->notify_cell(free_spaces[idx].row, free_spaces[idx].col, val);
 
 		if (free_spaces.size() == 1)
 			no_free_space = true;
