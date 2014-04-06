@@ -15,6 +15,7 @@ Board::Board()
 	no_free_space = false;
 	srand(time(0));
 	insert_random_tile();
+	insert_random_tile();
 }
 
 bool Board::init_round()
