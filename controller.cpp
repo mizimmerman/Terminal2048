@@ -2,7 +2,10 @@
 #include "view.h"
 #include "model.h"
 #include "terminal_view.h"
+#include <fstream>
 #include <iostream>
+using std::ifstream;
+using std::ofstream;
 using std::cout;
 using std::cin;
 using std::endl;
@@ -25,6 +28,10 @@ Command get_command(Mode m);
 
 void clear_line();
 
+// Checks if the score is greater than the old high score,
+// changes it if it is
+void save_high_score(int score);
+
 Controller::Controller()
 {
 	commands.insert({
@@ -40,11 +47,31 @@ void Controller::run()
 	Board board;
 	int score = 0;
 	Mode m = get_mode();
+	ifstream ifs;
+	ifs.open("hs.txt");
+
+	int high_score;
+	if(ifs) {
+	    ifs >> high_score;
+	} else {
+	    ifs.clear();
+	    ifs.close();
+	    ofstream ofs;
+	    ofs.open("hs.txt");
+	    ofs << 0;
+	    high_score = 0;
+	    ofs.close();
+	}
+
+	cout << "High score: " << high_score << endl << endl;
+	ifs.close();
+
 	while (board.init_round()) {
 		view->draw(score);
 		score += (board.*commands[get_command(m)])();
 	}
-
+	
+	save_high_score(score);
 	if (board.game_over())
 		view->game_over(score);
 	else
@@ -122,3 +149,23 @@ void clear_line()
 {
 	while (cin.get() != '\n');
 }
+
+void save_high_score(int score)
+{
+    ifstream ifs;
+    ifs.open("hs.txt");
+
+    int old_hs;
+    ifs >> old_hs;
+    
+    if(old_hs < score) {
+	cout << "New High Score!\n";
+	ifs.close();
+	ofstream ofs;
+	ofs.open("hs.txt");
+	ofs << score;
+	ofs.close();
+    }
+}
+
+
